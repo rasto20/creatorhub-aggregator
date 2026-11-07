@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenyan Creator Hub | Live Directory</title>
+    <script src="https://jsdelivr.net"></script>
+    <script src="https://tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+    <!-- Header Section -->
+    <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-tight text-red-600 flex items-center gap-2">
+                🇰🇪 <span class="text-gray-900">CREATOR</span>HUB
+            </h1>
+            <span class="text-xs bg-green-100 text-green-800 font-mono font-bold px-2 py-1 rounded-full animate-pulse">
+                ● LIVE AUTOPILOT FEED
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Content Stream -->
+    <main class="max-w-3xl mx-auto px-4 py-8">
+        <div id="feed-container" class="space-y-4">
+            <!-- Loading Indicator -->
+            <div id="loading" class="text-center py-12 text-gray-500 font-medium">
+                Parsing and structuring latest Kenyan trends...
+            </div>
+        </div>
+    </main>
+
+    <!-- Legal Safe-Harbor Footer -->
+    <footer class="bg-gray-900 text-gray-400 mt-20 border-t border-gray-800">
+        <div class="max-w-4xl mx-auto px-4 py-8 text-xs leading-relaxed space-y-4 text-center">
+            <p>
+                <strong>Legal Safe-Harbor Disclaimer:</strong> CreatorHub is an automated, algorithmic search directory and index tracking public data trends in Kenya. All headlines, micro-snippets, and source tags are the sole intellectual property of their respective creators and are indexed via public feeds under Fair Use provisions. 
+            </p>
+            <p>
+                Clicking links routes traffic <strong>directly</strong> out of this application to the native host domain. If you are an authorized content creator and wish to opt-out your public feed from our index, email your removal request to <span class="text-white underline">compliance@yourdomain.co.ke</span> for immediate processing.
+            </p>
+            <div class="text-gray-600 pt-4 border-t border-gray-800">
+                &copy; 2026 CreatorHub Platform. Built completely serverless.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Autonomous Integration Script -->
+    <script>
+        // Replace with your real credentials from your Supabase Dashboard
+        const SUPABASE_URL = "kckcbdtvpdigyxievgpr";
+        const SUPABASE_KEY = "sb_publishable_xTd2aq3vSSYA7uf1O2brww_7YjwtgmY"; 
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function fetchFeed() {
+            const container = document.getElementById('feed-container');
+            const loader = document.getElementById('loading');
+
+            const { data, error } = await supabase
+                .from('creator_feed')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(40);
+
+            if (error || !data) {
+                loader.innerText = "Connection timeout. Please refresh.";
+                return;
+            }
+
+            loader.remove();
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:border-gray-300 transition duration-200";
+                
+                const badgeColor = item.platform === 'TikTok' ? 'bg-black text-white' : 
+                                   item.platform === 'YouTube' ? 'bg-red-100 text-red-700' : 
+                                   item.platform === 'X' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800';
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded ${badgeColor}">${item.platform}</span>
+                        <span class="text-xs font-medium text-gray-500">@${item.creator_name}</span>
+                    </div>
+                    <h2 class="text-lg font-bold text-gray-900 leading-snug">
+                        <a href="${item.content_link}" target="_blank" rel="noopener noreferrer" class="hover:text-red-600 transition duration-150 block">
+                            ${item.title} ↗
+                        </a>
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-1.5">${item.summary || ''}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchFeed);
+    </script>
+</body>
+</html>
