@@ -1,5 +1,6 @@
 const Parser = require('rss-parser');
-const { createClient } = require('@supabase/supabase-client');
+const { createClient } = require('@supabase/supabase-js');
+
 
 const parser = new Parser();
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
