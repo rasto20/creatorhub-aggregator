@@ -18,7 +18,8 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: npm install rss-parser @supabase/supabase-client
+        run: npm install rss-parser @supabase/supabase-js
+
 
       - name: Run Autonomous Scraper
         env:
